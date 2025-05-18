@@ -47,9 +47,9 @@ const login = async (req, res) => {
         // Generate JWT Token
         const token = jwt.sign(
             { id: user.id, email: user.email },
-            'your_jwt_secret_key', // Secret key
-            { expiresIn: '1h' }     // Token expiry time
-        );
+            process.env.JWT_SECRET, // ✅ use .env secret here
+            { expiresIn: '1h' }
+          );
 
         res.status(200).json({
             message: 'Login successful',
@@ -61,34 +61,5 @@ const login = async (req, res) => {
     }
 };
 
-
-
 module.exports = { login , register } 
 
-
-// Register Controller
-// const registerUser = (req, res) => {
-//     const { username, password } = req.body;
-
-//     // Basic validation (just for demo)
-//     if (!username || !password) {
-//         return res.status(400).json({ message: 'Username and password required' });
-//     }
-
-//     // Dummy response (in real case, save to DB)
-//     res.status(201).json({ message: 'User registered successfully', user: { username } });
-// };
-
-// // Login Controller
-// const loginUser = (req, res) => {
-//     const { username, password } = req.body;
-
-//     // Dummy logic (in real case, verify from DB)
-//     if (username === 'admin' && password === '123456') {
-//         res.status(200).json({ message: 'Login successful', token: 'fake-jwt-token' });
-//     } else {
-//         res.status(401).json({ message: 'Invalid credentials' });
-//     }
-// };
-
-// module.exports = { registerUser, loginUser };
