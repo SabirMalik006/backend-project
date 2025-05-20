@@ -71,16 +71,16 @@ const updateJob = async (req, res) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    // const decoded = jwt.verify(token, JWT_SECRET);
 
     const job = await Job.findByPk(id);
     if (!job) {
       return res.status(404).json({ status: 'fail', message: 'Job not found' });
     }
 
-    // if (job.userId !== decoded.id) {
-    //   return res.status(403).json({ status: 'fail', message: 'Unauthorized' });
-    // }
+    if (job.userId !== decoded.id) {
+      return res.status(403).json({ status: 'fail', message: 'Unauthorized' });
+    }
 
     await job.update({ title, location, salary, description , category });
 
@@ -93,22 +93,15 @@ const updateJob = async (req, res) => {
 // Delete Job
 const deleteJob = async (req, res) => {
   const { id } = req.params;
-
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ status: 'fail', message: 'No token provided' });
-  }
-  const token = authHeader.split(' ')[1];
+  const userId = req.user.id; 
 
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-
     const job = await Job.findByPk(id);
     if (!job) {
       return res.status(404).json({ status: 'fail', message: 'Job not found' });
     }
 
-    // if (job.userId !== decoded.id) {
+    // if (job.userId !== userId) {
     //   return res.status(403).json({ status: 'fail', message: 'Unauthorized' });
     // }
 
@@ -116,8 +109,10 @@ const deleteJob = async (req, res) => {
 
     res.json({ status: 'success', message: 'Job deleted successfully' });
   } catch (error) {
-    res.status(401).json({ status: 'fail', message: 'Invalid token' });
+    console.error(error);
+    res.status(500).json({ status: 'fail', message: 'Server error' });
   }
 };
+
 
 module.exports = { postJob, getAllJobs , getJobById, updateJob, deleteJob };

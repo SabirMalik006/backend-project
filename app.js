@@ -16,6 +16,9 @@ app.use('/auth', authRouter)
 
 app.use('/jobs', jobRouter);
 
+// console.log("JWT_SECRET from env:", process.env.JWT_SECRET);
+
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

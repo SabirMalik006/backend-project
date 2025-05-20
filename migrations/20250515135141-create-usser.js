@@ -1,4 +1,5 @@
 'use strict';
+const { DataTypes } = require('sequelize');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -9,7 +10,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      name: { 
+      name: {
         type: Sequelize.STRING
       },
       email: {
@@ -26,7 +27,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      }
+      }, role: {
+        type: DataTypes.ENUM('user', 'employer', 'admin'),
+        defaultValue: 'user',
+      },
     });
   },
   async down(queryInterface, Sequelize) {

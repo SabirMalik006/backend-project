@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models').Usser;
 
 const register = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, password , role} = req.body;
 
     try {
         const user = await User.findOne({ where: { email } });
@@ -15,12 +15,12 @@ const register = async (req, res) => {
             });
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // 10 = salt rounds
-        const newUser = await User.create({ name, email, password : hashedPassword });
+        const hashedPassword = await bcrypt.hash(password, 10); 
+        const newUser = await User.create({ name, email, password : hashedPassword , role });
 
         res.status(201).json({
             message: 'User registered successfully',
-            data: { name: newUser.name, email: newUser.email }
+            data: { name: newUser.name, email: newUser.email , role: newUser.role },
         });
     } catch (error) {
         res.status(500).json({
@@ -44,10 +44,10 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
-        // Generate JWT Token
+        
         const token = jwt.sign(
-            { id: user.id, email: user.email },
-            process.env.JWT_SECRET, // ✅ use .env secret here
+            { id: user.id, email: user.email , role: user.role }, // Include role in the token
+            process.env.JWT_SECRET, 
             { expiresIn: '1h' }
           );
 
