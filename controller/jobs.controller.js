@@ -26,7 +26,7 @@ const postJob = async (req, res) => {
       location,
       salary,
       description,
-      userId: decoded.id, // Set userId from token
+      userId: decoded.id, 
       createdAt: new Date()
     });
 
